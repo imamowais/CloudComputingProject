@@ -21,8 +21,8 @@ pipeline {
                     REM Delete old zip if exists
                     if exist site.zip del site.zip
 
-                    REM Compress all HTML, CSS, JS files directly into root of zip
-                    powershell Compress-Archive -Path *.html,*.css,*.js -DestinationPath site.zip -Force
+                    REM Compress everything in repo root into site.zip (preserves folder structure)
+                    powershell Compress-Archive -Path * -DestinationPath site.zip -Force
 
                     echo ✅ Deployment package ready
                 '''
@@ -43,6 +43,15 @@ pipeline {
                     echo ✅ Deployment completed.
                 '''
             }
+        }
+    }
+
+    post {
+        success {
+            echo " Deployment successful!"
+        }
+        failure {
+            echo " Deployment failed. Check Jenkins logs."
         }
     }
 }
