@@ -9,17 +9,18 @@ pipeline {
     stages {
         stage('Deploy to Netlify') {
             steps {
-                sh '''
-                    echo "🚀 Zipping site..."
-                    zip site.zip index.html
+                bat '''
+                    echo 🚀 Zipping site...
+                    powershell -Command "Compress-Archive -Path index.html -DestinationPath site.zip -Force"
 
-                    echo "🚀 Deploying to Netlify..."
-                    curl -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN" \
-                         -H "Content-Type: application/zip" \
-                         --data-binary "@site.zip" \
-                         https://api.netlify.com/api/v1/sites/$SITE_ID/deploys
+                    echo 🚀 Deploying to Netlify...
+                    curl -H "Authorization: Bearer %NETLIFY_AUTH_TOKEN%" ^
+                        -H "Content-Type: application/zip" ^
+                        --data-binary "@site.zip" ^
+                        https://api.netlify.com/api/v1/sites/%SITE_ID%/deploys
                 '''
             }
         }
+
     }
 }
