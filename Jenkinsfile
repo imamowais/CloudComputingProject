@@ -13,11 +13,12 @@ pipeline {
             }
         }
 
-        stage('Deploy Single HTML to Netlify') {
+        stage('Deploy index.html to Netlify') {
             steps {
                 bat '''
-                    echo 🚀 Deploying index.html directly...
+                    echo 🚀 Deploying index.html directly to Netlify...
 
+                    REM Direct upload using curl, content-type text/html ensures proper rendering
                     curl -H "Authorization: Bearer %NETLIFY_AUTH_TOKEN%" ^
                          -H "Content-Type: text/html" ^
                          --data-binary "@index.html" ^
