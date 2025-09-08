@@ -7,26 +7,33 @@ pipeline {
     }
 
     stages {
-        stage('Checkout Repo') {
-            steps {
-                checkout scm
-            }
-        }
-
-        stage('Deploy index.html to Netlify') {
+        stage('Deploy to Netlify') {
             steps {
                 bat '''
-                    echo 🚀 Deploying index.html directly to Netlify...
+                    echo 🚀 Preparing site for deployment...
 
-                    REM Direct upload using curl, content-type text/html ensures proper rendering
+                    REM Delete old files if exist
+                    if exist site.zip del site.zip
+                    if exist site rmdir /s /q site
+
+                    REM Create folder
+                    mkdir site
+
+                    REM Copy all project files (HTML, CSS, JS)
+                    copy *.html site\\
+                    copy *.css site\\
+                    copy *.js site\\
+
+                    REM Compress files directly (no nested folder)
+                    powershell Compress-Archive -Path site\\* -DestinationPath site.zip -Force
+
+                    echo 🚀 Deploying to Netlify...
                     curl -H "Authorization: Bearer %NETLIFY_AUTH_TOKEN%" ^
-                         -H "Content-Type: text/html" ^
-                         --data-binary "@index.html" ^
+                         -H "Content-Type: application/zip" ^
+                         --data-binary "@site.zip" ^
                          https://api.netlify.com/api/v1/sites/%SITE_ID%/deploys
-
-                    echo ✅ Deployment completed.
                 '''
             }
-        }
-    }
+        }
+    }
 }
