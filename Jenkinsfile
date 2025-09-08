@@ -1,6 +1,6 @@
 pipeline {
     agent any
-9664e49a-5d63-4e18-8e82-4c51502ed9f6
+
     environment {
         NETLIFY_AUTH_TOKEN = credentials('netlify-token')
         SITE_ID = '9664e49a-5d63-4e18-8e82-4c51502ed9f6'
@@ -34,6 +34,6 @@ pipeline {
                          https://api.netlify.com/api/v1/sites/%SITE_ID%/deploys
                 '''
             }
-        }
-    }
+        }
+    }
 }
